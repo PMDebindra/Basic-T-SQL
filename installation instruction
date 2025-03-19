@@ -1,0 +1,30 @@
+Step 1: Download SQL Server
+	Go to the Official Microsoft SQL Server Download Page
+	https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+
+Choose the SQL Server Edition:
+	Developer (Free, full-featured, for development/testing)
+	Express (Free, lightweight, for small applications)
+	Click "Download Now" under the edition you want.
+
+Step 2: Install SQL Server
+	Open the downloaded .exe file.
+	Select "Basic Installation" (for a quick setup) or "Custom" (for advanced setup).
+	Accept the license terms and click Next.
+	Choose the installation location and click Install.
+	Wait for the installation to complete.
+
+Step 3: Download and Install SQL Server Management Studio (SSMS)
+	Go to SSMS Download Page
+		https://learn.microsoft.com/en-us/ssms/download-sql-server-management-studio-ssms#download-ssms
+	Click "Download SQL Server Management Studio".
+	Run the downloaded SSMS-Setup-ENU.exe file.
+	Follow the installation steps and restart your computer if required.
+
+Step 4: Connect to SQL Server
+	Open SQL Server Management Studio (SSMS).
+	In the Server name field, enter:
+	(local) or .\SQLEXPRESS (for Express edition).
+	(local) or MSSQLSERVER (for Developer edition).
+	Choose Windows Authentication.
+	Click Connect.
