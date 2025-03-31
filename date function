@@ -1,0 +1,10 @@
+----date function--
+select CURRENT_TIMESTAMP as rightnow;
+select GETDATE() as getdatenow
+select SYSDATETIME() as rightnow 
+select DATEADD(year,1,'2025-01-01 03:04:05')
+select DATEPART(MONTH,'2025-01-01 03:04:05') as monthofdate
+select DATENAME(WEEKDAY,getdate()) as weekdayOfDate
+select DATEDIFF(year,'2024-01-01 03:04:05',getdate()) as differentYear
+ 
+
