@@ -8,3 +8,26 @@ select DATENAME(WEEKDAY,getdate()) as weekdayOfDate
 select DATEDIFF(year,'2024-01-01 03:04:05',getdate()) as differentYear
  
 
+
+ ---convert date to string--
+declare @mydate as datetime=getdate()
+select 'The Date  and Time is : ' + CONVERT(nvarchar(20),@mydate) as MyConvertDate;
+
+select PARSE('Monday,31 March 2025' as date) as MyPaesedDate;
+
+declare @mydate1 as datetime=getdate()
+select CAST(@mydate1 as nvarchar(20)) as MyCastDate;
+
+
+select  FORMAT(CAST(getdate() as datetime),'D') as MyFormatedLongDate;
+
+select  FORMAT(CAST(getdate() as datetime),'d') as MyFormatedShortDate;
+
+select  FORMAT(CAST(getdate() as datetime),'dd-MM-yyyy') as MyFormatedShortDate;
+
+SELECT CONVERT(DATETIME, SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AT TIME ZONE 'Nepal Standard Time') AS NepalTime;
+
+SELECT SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AT TIME ZONE 'Nepal Standard Time' AS NepalTime;
+
+
+ 
