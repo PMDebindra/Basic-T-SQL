@@ -1,0 +1,105 @@
+/*
+What is an Audit Log in MS SQL Server?
+An audit log in SQL Server is a record of changes made to the database, 
+such as INSERT, UPDATE, and DELETE operations. It helps track who made changes, 
+what data was modified, and when the modification occurred.
+*/
+
+
+--Step 1: Create Employee Information Table--
+--============================================
+CREATE TABLE Employee (
+    EmployeeID INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    Position NVARCHAR(50),
+    Salary DECIMAL(10,2),
+    Department NVARCHAR(50),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+select * from Employee;
+--=========================================
+--Step 2: Create Audit Log Table-----
+--=========================================
+CREATE TABLE AuditLog (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeID INT,
+    ActionType NVARCHAR(10),  -- 'INSERT', 'UPDATE', 'DELETE'
+    OldData NVARCHAR(MAX),    -- Stores previous data for UPDATE and DELETE
+    NewData NVARCHAR(MAX),    -- Stores new data for INSERT and UPDATE
+    ChangedBy SYSNAME DEFAULT SUSER_NAME(), -- Captures username
+    ChangedAt DATETIME DEFAULT GETDATE()
+);
+select * from AuditLog;
+--===========================================
+--Step 3: Create a Trigger for Auditing---
+--==========================================
+--Trigger for INSERT-----
+--==========================================
+CREATE TRIGGER trg_Employee_Insert
+ON Employee
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO AuditLog (EmployeeID, ActionType, NewData)
+    SELECT 
+        i.EmployeeID, 
+        'INSERT', 
+        CONCAT('Name:', i.Name, ', Position:', i.Position, ', Salary:', i.Salary, ', Department:', i.Department)
+    FROM inserted i;
+END;
+--=========================================
+--Trigger for UPDATE-----
+--==========================================
+CREATE TRIGGER trg_Employee_Update
+ON Employee
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO AuditLog (EmployeeID, ActionType, OldData, NewData)
+    SELECT 
+        d.EmployeeID, 
+        'UPDATE', 
+        CONCAT('Name:', d.Name, ', Position:', d.Position, ', Salary:', d.Salary, ', Department:', d.Department),
+        CONCAT('Name:', i.Name, ', Position:', i.Position, ', Salary:', i.Salary, ', Department:', i.Department)
+    FROM deleted d
+    INNER JOIN inserted i ON d.EmployeeID = i.EmployeeID;
+END;
+--=================================================
+--Trigger for DELETE
+--===============================================
+CREATE TRIGGER trg_Employee_Delete
+ON Employee
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO AuditLog (EmployeeID, ActionType, OldData)
+    SELECT 
+        d.EmployeeID, 
+        'DELETE', 
+        CONCAT('Name:', d.Name, ', Position:', d.Position, ', Salary:', d.Salary, ', Department:', d.Department)
+    FROM deleted d;
+END;
+--============================================
+--Testing the Audit Log----
+--============================================
+-- Insert a new employee
+INSERT INTO Employee (Name, Position, Salary, Department)
+VALUES ('DEBINDRA PUN', 'Software Engineer', 60000, 'IT');
+
+-- Update an employee
+UPDATE Employee 
+SET Salary = 65000, Position = 'Senior Software Engineer'
+WHERE EmployeeID = 1;
+
+-- Delete an employee
+DELETE FROM Employee WHERE EmployeeID = 1;
+
+-- Check the audit log
+SELECT * FROM AuditLog;
+--END-----------------
+
+select * from Employee;
+INSERT INTO Employee (NAME,Position,Salary,Department) VALUES('DEBINDRA PUN','IT SUPPORT',30000.00,'IT');
+SELECT * FROM AuditLog;
+
